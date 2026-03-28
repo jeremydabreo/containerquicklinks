@@ -1,0 +1,74 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+  <!ENTITY name      "container-quicklinks">
+  <!ENTITY author    "local">
+  <!ENTITY version   "1.0.0">
+  <!ENTITY pluginURL "https://raw.githubusercontent.com/YOUR_GITHUB/container-quicklinks/main/container-quicklinks.plg">
+  <!ENTITY pluginDir "/usr/local/emhttp/plugins/&name;">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;">
+
+<CHANGES>
+### v1.0.0
+- Initial release
+- Add container quick-links to the Unraid nav bar
+- Drag-and-drop sorting UI
+- Custom labels and icons per container
+</CHANGES>
+
+<!--
+  ============================================================
+  INSTALL
+  ============================================================
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+# Create plugin directory
+mkdir -p &pluginDir;/css
+mkdir -p &pluginDir;/js
+mkdir -p /boot/config/plugins/&name;
+
+echo "Container Quicklinks: directories created"
+</INLINE>
+</FILE>
+
+<!--
+  Copy plugin page files - these are embedded below and extracted at install
+-->
+<FILE Name="&pluginDir;/container-quicklinks.page">
+<INLINE>
+Title="Container Quicklinks"
+Icon="chain.png"
+Tag="cog"
+---
+&lt;?php
+require_once '/usr/local/emhttp/plugins/container-quicklinks/include/helpers.php';
+$links = cql_get_links();
+$containers = cql_get_docker_containers();
+?&gt;
+&lt;!-- Page content is rendered by the .php include below --&gt;
+&lt;?php include '/usr/local/emhttp/plugins/container-quicklinks/include/settings_page.php'; ?&gt;
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+echo "Container Quicklinks: plugin installed successfully"
+</INLINE>
+</FILE>
+
+<!--
+  ============================================================
+  REMOVE
+  ============================================================
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+rm -rf &pluginDir;
+echo "Container Quicklinks: removed"
+</INLINE>
+</FILE>
+
+</PLUGIN>
