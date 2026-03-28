@@ -1,11 +1,11 @@
 <?xml version='1.0' standalone='yes'?>
-
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "container-quicklinks">
   <!ENTITY author    "jeremydabreo">
   <!ENTITY version   "1.0.0">
   <!ENTITY pluginURL "https://raw.githubusercontent.com/jeremydabreo/containerquicklinks/main/container-quicklinks.plg">
   <!ENTITY pluginDir "/usr/local/emhttp/plugins/&name;">
+  <!ENTITY rawURL    "https://raw.githubusercontent.com/jeremydabreo/containerquicklinks/main">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;">
@@ -20,22 +20,50 @@
 
 <!--
   ============================================================
-  INSTALL
+  INSTALL - create directories
   ============================================================
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-# Create plugin directory
 mkdir -p &pluginDir;/css
 mkdir -p &pluginDir;/js
+mkdir -p &pluginDir;/include
+mkdir -p &pluginDir;/event
 mkdir -p /boot/config/plugins/&name;
-
 echo "Container Quicklinks: directories created"
 </INLINE>
 </FILE>
 
 <!--
-  Copy plugin page files - these are embedded below and extracted at install
+  ============================================================
+  DOWNLOAD - fetch all plugin files from GitHub
+  ============================================================
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+BASE="&rawURL;"
+DIR="&pluginDir;"
+
+echo "Container Quicklinks: downloading plugin files..."
+
+wget -q -O "$DIR/ajax.php"                    "$BASE/ajax.php"
+wget -q -O "$DIR/include/helpers.php"         "$BASE/include/helpers.php"
+wget -q -O "$DIR/include/settings_page.php"   "$BASE/include/settings_page.php"
+wget -q -O "$DIR/css/settings.css"            "$BASE/css/settings.css"
+wget -q -O "$DIR/js/settings.js"              "$BASE/js/settings.js"
+wget -q -O "$DIR/js/nav-inject.js"            "$BASE/js/nav-inject.js"
+wget -q -O "$DIR/event/display"               "$BASE/event/display"
+
+chmod +x "$DIR/event/display"
+
+echo "Container Quicklinks: all files downloaded"
+</INLINE>
+</FILE>
+
+<!--
+  ============================================================
+  PAGE FILE - embedded directly (no download needed)
+  ============================================================
 -->
 <FILE Name="&pluginDir;/container-quicklinks.page">
 <INLINE>
@@ -43,19 +71,24 @@ Title="Container Quicklinks"
 Icon="chain.png"
 Tag="cog"
 ---
-&lt;?php
+<?php
 require_once '/usr/local/emhttp/plugins/container-quicklinks/include/helpers.php';
 $links = cql_get_links();
 $containers = cql_get_docker_containers();
-?&gt;
-&lt;!-- Page content is rendered by the .php include below --&gt;
-&lt;?php include '/usr/local/emhttp/plugins/container-quicklinks/include/settings_page.php'; ?&gt;
+?>
+<?php include '/usr/local/emhttp/plugins/container-quicklinks/include/settings_page.php'; ?>
 </INLINE>
 </FILE>
 
+<!--
+  ============================================================
+  DONE
+  ============================================================
+-->
 <FILE Run="/bin/bash">
 <INLINE>
-echo "Container Quicklinks: plugin installed successfully"
+echo "Container Quicklinks: installed successfully"
+echo "Go to Settings > Container Quicklinks to configure"
 </INLINE>
 </FILE>
 
