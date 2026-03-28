@@ -2,7 +2,7 @@
 
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "container-quicklinks">
-  <!ENTITY author    "local">
+  <!ENTITY author    "jeremydabreo">
   <!ENTITY version   "1.0.0">
   <!ENTITY pluginURL "https://raw.githubusercontent.com/jeremydabreo/containerquicklinks/main/container-quicklinks.plg">
   <!ENTITY pluginDir "/usr/local/emhttp/plugins/&name;">
