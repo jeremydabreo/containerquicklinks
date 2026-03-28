@@ -4,7 +4,7 @@
   <!ENTITY name      "container-quicklinks">
   <!ENTITY author    "local">
   <!ENTITY version   "1.0.0">
-  <!ENTITY pluginURL "https://raw.githubusercontent.com/YOUR_GITHUB/container-quicklinks/main/container-quicklinks.plg">
+  <!ENTITY pluginURL "https://github.com/jeremydabreo/containerquicklinks/blob/main/container-quicklinks.plg">
   <!ENTITY pluginDir "/usr/local/emhttp/plugins/&name;">
 ]>
 
